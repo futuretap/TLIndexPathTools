@@ -46,5 +46,8 @@
       <FileRef
          location = "group:Examples/View Controller Backed/View Controller Backed.xcodeproj">
       </FileRef>
+      <FileRef
+         location = "group:Examples/StressTest/StressTest.xcodeproj">
+      </FileRef>
    </Group>
 </Workspace>
