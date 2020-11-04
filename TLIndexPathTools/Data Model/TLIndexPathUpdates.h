@@ -83,7 +83,6 @@ NS_ASSUME_NONNULL_BEGIN
 @property (readonly, nonatomic) BOOL hasChanges;
 @property (copy, readonly, nonatomic) NSArray<NSString *> *insertedSectionNames;
 @property (copy, readonly, nonatomic) NSArray<NSString *> *deletedSectionNames;
-@property (copy, readonly, nonatomic) NSArray<NSString *> *movedSectionNames;
 @property (copy, readonly, nonatomic) NSArray *insertedItems;
 @property (copy, readonly, nonatomic) NSArray *deletedItems;
 @property (copy, readonly, nonatomic) NSArray *movedItems;

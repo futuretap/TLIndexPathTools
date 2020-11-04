@@ -52,7 +52,6 @@
         
         NSMutableArray *insertedSectionNames = [[NSMutableArray alloc] init];
         NSMutableArray *deletedSectionNames = [[NSMutableArray alloc] init];
-        NSMutableArray *movedSectionNames = [[NSMutableArray alloc] init];
         NSMutableArray *insertedItems = [[NSMutableArray alloc] init];
         NSMutableArray *deletedItems = [[NSMutableArray alloc] init];
         NSMutableArray *movedItems = [[NSMutableArray alloc] init];
@@ -60,7 +59,6 @@
 
         _insertedSectionNames = insertedSectionNames;
         _deletedSectionNames = deletedSectionNames;
-        _movedSectionNames = movedSectionNames;
         _insertedItems = insertedItems;
         _deletedItems = deletedItems;
         _movedItems = movedItems;
@@ -79,14 +77,14 @@
         }
 
         // Inserted sections
-        NSInteger index = 0;
-        for (NSString *sectionName in updatedSectionNames) {
+		[updatedSectionNames enumerateObjectsUsingBlock:^(NSString *sectionName, NSUInteger index, BOOL * _Nonnull stop) {
             if ([oldSectionNames containsObject:sectionName]) {
                 NSInteger expectedIndex = [workingSectionNames indexOfObject:sectionName];
                 if (index != expectedIndex) {
                     // only need to explicitly move sections that are misplaced
                     // in the working set.
-                    [movedSectionNames addObject:sectionName];
+					[deletedSectionNames addObject:sectionName];
+					[insertedSectionNames addObject:sectionName];
                     [workingSectionNames removeObject:sectionName];
                     [workingSectionNames insertObject:sectionName atIndex:index];
                 }
@@ -94,8 +92,7 @@
                 [insertedSectionNames addObject:sectionName];
                 [workingSectionNames insertObject:sectionName atIndex:index];
             }
-            index++;
-        }
+        }];
         
         // Deleted and moved items
         for (id item in oldDataModel.items) {
@@ -106,16 +103,23 @@
                 NSString *updatedSectionName = [updatedDataModel sectionNameForSection:updatedIndexPath.section];
                 // can't rely on isEqual, so must use compare
                 BOOL differentIndexPath = [oldIndexPath compare:updatedIndexPath] != NSOrderedSame;
-                if (differentIndexPath || ![updatedSectionName isEqualToString:sectionName]) {
-                    // Don't move items in moved sections
-                    if (![movedSectionNames containsObject:sectionName] && differentIndexPath) {
-                        //                        // TODO Not sure if this is correct when moves are combined with inserts and/or deletes
-                        //                        // Don't report as moved if the only change is the section has moved
-                        //                        if (oldIndexPath.row == updatedIndexPath.row) {
-                        //                            if ([sectionName isEqualToString:updatedSectionName]) continue;
-                        //                        }
-                        [movedItems addObject:item];
-                    }
+                BOOL differentSection = ![updatedSectionName isEqualToString:sectionName];
+                if (differentIndexPath || differentSection) {
+					if ([deletedSectionNames containsObject:sectionName]) {
+						// Check if item is inserted in another section
+						if (![insertedSectionNames containsObject:updatedSectionName]) {
+							[insertedItems addObject:item];
+						}
+						continue;
+					}
+					
+					if (differentSection && [insertedSectionNames containsObject:updatedSectionName]) {
+						// treat moving an item into a new section as insertSection + deleteItem
+						[deletedItems addObject:item];
+						continue;
+					}
+					
+                    [movedItems addObject:item];
                 }
             } else {
                 // Don't delete items in deleted sections
@@ -149,7 +153,7 @@
             }
         }
 
-        if (_movedSectionNames.count + _insertedSectionNames.count + _deletedSectionNames.count
+        if (_insertedSectionNames.count + _deletedSectionNames.count
             + _movedItems.count + _insertedItems.count + _deletedItems.count + _modifiedItems.count > 0) {
             _hasChanges = YES;
         }
@@ -175,15 +179,6 @@
 
     [tableView performBatchUpdates:^{
 		
-		if (self.insertedSectionNames.count) {
-			NSMutableIndexSet *indexSet = [[NSMutableIndexSet alloc] init];
-			for (NSString *sectionName in self.insertedSectionNames) {
-				NSInteger section = [self.updatedDataModel sectionForSectionName:sectionName];
-				[indexSet addIndex:section];
-			}
-			[tableView insertSections:indexSet withRowAnimation:animation];
-		}
-		
 		if (self.deletedSectionNames.count) {
 			NSMutableIndexSet *indexSet = [[NSMutableIndexSet alloc] init];
 			for (NSString *sectionName in self.deletedSectionNames) {
@@ -193,16 +188,14 @@
 			[tableView deleteSections:indexSet withRowAnimation:animation];
 		}
 		
-		//    // TODO Disable reordering sections because it may cause duplicate animations
-		//    // when a item is inserted, deleted, or moved in that section. Need to figure
-		//    // out how to avoid the duplicate animation.
-		//    if (self.movedSectionNames.count) {
-		//        for (NSString *sectionName in self.movedSectionNames) {
-		//            NSInteger oldSection = [self.oldDataModel sectionForSectionName:sectionName];
-		//            NSInteger updatedSection = [self.updatedDataModel sectionForSectionName:sectionName];
-		//            [tableView moveSection:oldSection toSection:updatedSection];
-		//        }
-		//    }
+		if (self.insertedSectionNames.count) {
+			NSMutableIndexSet *indexSet = [[NSMutableIndexSet alloc] init];
+			for (NSString *sectionName in self.insertedSectionNames) {
+				NSInteger section = [self.updatedDataModel sectionForSectionName:sectionName];
+				[indexSet addIndex:section];
+			}
+			[tableView insertSections:indexSet withRowAnimation:animation];
+		}
 		
 		if (self.insertedItems.count) {
 			NSMutableArray *indexPaths = [[NSMutableArray alloc] init];
@@ -329,14 +322,6 @@
                 [indexSet addIndex:section];
             }
             [collectionView deleteSections:indexSet];
-        }
-        
-        if (self.movedSectionNames.count) {
-            for (NSString *sectionName in self.movedSectionNames) {
-                NSInteger oldSection = [self.oldDataModel sectionForSectionName:sectionName];
-                NSInteger updatedSection = [self.updatedDataModel sectionForSectionName:sectionName];
-                [collectionView moveSection:oldSection toSection:updatedSection];
-            }
         }
         
         if (self.insertedItems.count) {
