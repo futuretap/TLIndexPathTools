@@ -79,8 +79,7 @@
         }
 
         // Inserted sections
-        NSInteger index = 0;
-        for (NSString *sectionName in updatedSectionNames) {
+		[updatedSectionNames enumerateObjectsUsingBlock:^(NSString *sectionName, NSUInteger index, BOOL * _Nonnull stop) {
             if ([oldSectionNames containsObject:sectionName]) {
                 NSInteger expectedIndex = [workingSectionNames indexOfObject:sectionName];
                 if (index != expectedIndex) {
@@ -94,8 +93,7 @@
                 [insertedSectionNames addObject:sectionName];
                 [workingSectionNames insertObject:sectionName atIndex:index];
             }
-            index++;
-        }
+        }];
         
         // Deleted and moved items
         for (id item in oldDataModel.items) {
@@ -106,16 +104,19 @@
                 NSString *updatedSectionName = [updatedDataModel sectionNameForSection:updatedIndexPath.section];
                 // can't rely on isEqual, so must use compare
                 BOOL differentIndexPath = [oldIndexPath compare:updatedIndexPath] != NSOrderedSame;
-                if (differentIndexPath || ![updatedSectionName isEqualToString:sectionName]) {
-                    // Don't move items in moved sections
-                    if (![movedSectionNames containsObject:sectionName] && differentIndexPath) {
-                        //                        // TODO Not sure if this is correct when moves are combined with inserts and/or deletes
-                        //                        // Don't report as moved if the only change is the section has moved
-                        //                        if (oldIndexPath.row == updatedIndexPath.row) {
-                        //                            if ([sectionName isEqualToString:updatedSectionName]) continue;
-                        //                        }
-                        [movedItems addObject:item];
+                BOOL differentSection = ![updatedSectionName isEqualToString:sectionName];
+                if (differentIndexPath || differentSection) {
+                    if ([movedSectionNames containsObject:sectionName] && oldIndexPath.row == updatedIndexPath.row) {
+                        // Don't move items in moved sections
+                        continue;
                     }
+                    if (differentSection && [insertedSectionNames containsObject:sectionName]) {
+                        // treat moving an item into a new section as insertSection + deleteItem
+                        [deletedItems addObject:item];
+                        continue;
+                    }
+                    
+                    [movedItems addObject:item];
                 }
             } else {
                 // Don't delete items in deleted sections
