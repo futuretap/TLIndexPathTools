@@ -26,66 +26,62 @@
 	
 	[self.tableView reloadData];
 	self.indexPathController.items = @[];
-	self.items = @[
-		@[
-			@"Jelly Bean",
-			@"Fredricksburg"],
-		@[@"Lorem ipsum",
-		  @"dolor sit",
-		  @"amet, consectetur",
-		  @"adipiscing elit.",
-		  @"Donec ut",
-		  @"adipiscing massa.",
-		  @"Aliquam vitae",
-		  @"nibh ac",
-		  @"dui lobortis"],
-		@[@"Fredricksburg",
-		  @"Jelly Bean",
-		  @"George Washington",
-		  @"Grand Canyon",
-		  @"Bibliography",
-		  @"Keyboard Shortcut",
-		  @"Metadata",
-		  @"Fundamental",
-		  @"Cellar Door",
-		  @"Lorem ipsum",
-		  @"dolor sit",
-		  @"amet, consectetur",
-		  @"adipiscing elit.",
-		  @"Donec ut",
-		  @"adipiscing massa.",
-		  @"Aliquam vitae",
-		  @"nibh ac",
-		  @"dui lobortis",
-		  @"congue in",
-		  @"non dui.",
-		  @"Duis hendrerit",
-		  @"metus ut",
-		  @"neque sodales",
-		  @"sodales. Duis",
-		  @"a elit",
-		  @"nibh. Praesent",
-		  @"risus tortor,",
-		  @"rutrum ac",
-		  @"lobortis in,",
-		  @"malesuada ac",
-		  @"turpis. Fusce",
-		  @"rhoncus adipiscing",
-		  @"eleifend. Nulla",
-		  @"sed arcu",
-		  @"erat. Cras",
-		  @"aliquam turpis",
-		  @"a purus",
-		  @"vestibulum vehicula.",
-		  @"Pellentesque at",
-		  @"sapien id",
-		  @"eros ornare",
-		  @"rutrum. Pellentesque",
-		  @"habitant morbi",
-		  @"tristique senectus",
-		  @"et netus"
-		],
-		@[]
+	self.items = @[@"Jelly Bean",
+				   @"Fredricksburg",
+				   @"Lorem ipsum",
+				   @"dolor sit",
+				   @"amet, consectetur",
+				   @"adipiscing elit.",
+				   @"Donec ut",
+				   @"adipiscing massa.",
+				   @"Aliquam vitae",
+				   @"nibh ac",
+				   @"dui lobortis",
+				   @"Fredricksburg",
+				   @"Jelly Bean",
+				   @"George Washington",
+				   @"Grand Canyon",
+				   @"Bibliography",
+				   @"Keyboard Shortcut",
+				   @"Metadata",
+				   @"Fundamental",
+				   @"Cellar Door",
+				   @"Lorem ipsum",
+				   @"dolor sit",
+				   @"amet, consectetur",
+				   @"adipiscing elit.",
+				   @"Donec ut",
+				   @"adipiscing massa.",
+				   @"Aliquam vitae",
+				   @"nibh ac",
+				   @"dui lobortis",
+				   @"congue in",
+				   @"non dui.",
+				   @"Duis hendrerit",
+				   @"metus ut",
+				   @"neque sodales",
+				   @"sodales. Duis",
+				   @"a elit",
+				   @"nibh. Praesent",
+				   @"risus tortor,",
+				   @"rutrum ac",
+				   @"lobortis in,",
+				   @"malesuada ac",
+				   @"turpis. Fusce",
+				   @"rhoncus adipiscing",
+				   @"eleifend. Nulla",
+				   @"sed arcu",
+				   @"erat. Cras",
+				   @"aliquam turpis",
+				   @"a purus",
+				   @"vestibulum vehicula.",
+				   @"Pellentesque at",
+				   @"sapien id",
+				   @"eros ornare",
+				   @"rutrum. Pellentesque",
+				   @"habitant morbi",
+				   @"tristique senectus",
+				   @"et netus"
 	];
 
 	self.pauseDuringBatchUpdates = YES;
@@ -96,13 +92,28 @@
 }
 
 - (void)swap {
-	self.selectedItems = arc4random() % 4;
-	self.indexPathController.items = self.items[self.selectedItems];
+	NSUInteger sectionNumber = arc4random() % 10;
+	
+	NSMutableArray *usedItems = self.items.mutableCopy;
+	NSMutableArray *sections = NSMutableArray.array;
+	for (NSUInteger i = 0; i < sectionNumber; i++) {
+		NSMutableArray *items = NSMutableArray.array;
+		NSUInteger itemNumber = arc4random() % 4;
+		for (NSUInteger itemIndex = 0; itemIndex < itemNumber; itemIndex++) {
+			NSString *item = usedItems[arc4random() % (usedItems.count - 1)];
+			[items addObject:item];
+			[usedItems removeObject:item];
+		}
+		[sections addObject:[[TLIndexPathSectionInfo alloc] initWithItems:items name:[NSString stringWithFormat:@"Section %lu", (long)i]]];
+	}
+	
+	TLIndexPathDataModel *datamodel = [[TLIndexPathDataModel alloc] initWithSectionInfos:sections identifierKeyPath:nil];
+	self.indexPathController.dataModel = datamodel;
 //	if (self.selectedItems == 2) {
 //		self.indexPathController.items = self.items[self.selectedItems];
 //	}
-	NSUInteger rows = [self.tableView numberOfRowsInSection:0];
-	NSLog(@"swap: %ld (datasource) %ld (tableView) %ld (visible)", self.indexPathController.items.count, rows, self.tableView.visibleCells.count);
+//	NSUInteger rows = [self.tableView numberOfRowsInSection:0];
+//	NSLog(@"swap: %ld (datasource) %ld (tableView) %ld (visible)", self.indexPathController.items.count, rows, self.tableView.visibleCells.count);
 	NSTimeInterval delay = 0.005 * (arc4random() % 50);
 	if (delay > 0.15) {
 //		[self.tableView reloadData];
