@@ -374,4 +374,7 @@ const NSString *TLIndexPathDataModelNilSectionName = @"__TLIndexPathDataModelNil
     return [NSIndexPath indexPathForRow:indexPath.row inSection:indexPath.section];
 }
 
+- (NSString *)debugDescription {
+	return [NSString stringWithFormat:@"<%@: %p> \n%@", [self class], self, [self.sections valueForKey:@"debugDescription"]];
+}
 @end

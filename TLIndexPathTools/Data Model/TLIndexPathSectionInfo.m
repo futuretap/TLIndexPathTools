@@ -42,4 +42,8 @@
     return self;
 }
 
+- (NSString *)debugDescription {
+	return [NSString stringWithFormat:@"<%@: %p> %@: %@", [self class], self, self.name, [[self.objects valueForKey:@"debugDescription"] componentsJoinedByString:@", "]];
+}
+
 @end
