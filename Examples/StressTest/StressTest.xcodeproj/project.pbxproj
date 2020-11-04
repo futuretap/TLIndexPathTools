@@ -7,7 +7,6 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		86029E471AEEB82400ED36D7 /* TLIndexPathTools.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 860B7B0017EA02CB00C984B4 /* TLIndexPathTools.framework */; };
 		860B7AB017E9F89900C984B4 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 860B7AAF17E9F89900C984B4 /* Foundation.framework */; };
 		860B7AB217E9F89900C984B4 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 860B7AB117E9F89900C984B4 /* CoreGraphics.framework */; };
 		860B7AB417E9F89900C984B4 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 860B7AB317E9F89900C984B4 /* UIKit.framework */; };
@@ -16,10 +15,11 @@
 		860B7AC017E9F89900C984B4 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 860B7ABF17E9F89900C984B4 /* AppDelegate.m */; };
 		860B7AC317E9F89900C984B4 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 860B7AC117E9F89900C984B4 /* Main.storyboard */; };
 		860B7AC817E9F89900C984B4 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 860B7AC717E9F89900C984B4 /* Images.xcassets */; };
-		860B7AEA17E9FFC500C984B4 /* TLIndexPathTools.xcodeproj in Resources */ = {isa = PBXBuildFile; fileRef = 860B7AE917E9FFC500C984B4 /* TLIndexPathTools.xcodeproj */; };
 		860B7AEC17EA024500C984B4 /* CoreData.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 860B7AEB17EA024500C984B4 /* CoreData.framework */; };
 		860B7AEE17EA024E00C984B4 /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 860B7AED17EA024E00C984B4 /* QuartzCore.framework */; };
 		AAB2F7D1233CF25A00A89F84 /* StressTestTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = AAB2F7D0233CF25A00A89F84 /* StressTestTableViewController.m */; };
+		AAE0C3A3255334C80020E560 /* TLIndexPathTools.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 860B7B0017EA02CB00C984B4 /* TLIndexPathTools.framework */; };
+		AAE0C3A4255334C80020E560 /* TLIndexPathTools.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 860B7B0017EA02CB00C984B4 /* TLIndexPathTools.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -37,7 +37,28 @@
 			remoteGlobalIDString = B145DAB9179EE94300CF270E;
 			remoteInfo = TLIndexPathTools;
 		};
+		AAE0C39C255332B30020E560 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 860B7AE917E9FFC500C984B4 /* TLIndexPathTools.xcodeproj */;
+			proxyType = 1;
+			remoteGlobalIDString = 86029DF21AEEAC2E00ED36D7;
+			remoteInfo = TLIndexPathTools;
+		};
 /* End PBXContainerItemProxy section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		AAE0C3A5255334C80020E560 /* Embed Frameworks */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+				AAE0C3A4255334C80020E560 /* TLIndexPathTools.framework in Embed Frameworks */,
+			);
+			name = "Embed Frameworks";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
 		860B7AAC17E9F89900C984B4 /* StressTest.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = StressTest.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -66,11 +87,11 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				86029E471AEEB82400ED36D7 /* TLIndexPathTools.framework in Frameworks */,
 				860B7AEE17EA024E00C984B4 /* QuartzCore.framework in Frameworks */,
 				860B7AEC17EA024500C984B4 /* CoreData.framework in Frameworks */,
 				860B7AB217E9F89900C984B4 /* CoreGraphics.framework in Frameworks */,
 				860B7AB417E9F89900C984B4 /* UIKit.framework in Frameworks */,
+				AAE0C3A3255334C80020E560 /* TLIndexPathTools.framework in Frameworks */,
 				860B7AB017E9F89900C984B4 /* Foundation.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -154,10 +175,12 @@
 				860B7AA817E9F89900C984B4 /* Sources */,
 				860B7AA917E9F89900C984B4 /* Frameworks */,
 				860B7AAA17E9F89900C984B4 /* Resources */,
+				AAE0C3A5255334C80020E560 /* Embed Frameworks */,
 			);
 			buildRules = (
 			);
 			dependencies = (
+				AAE0C39D255332B30020E560 /* PBXTargetDependency */,
 			);
 			name = StressTest;
 			productName = Blocks;
@@ -172,6 +195,11 @@
 			attributes = {
 				LastUpgradeCheck = 1110;
 				ORGANIZATIONNAME = "Tractable Labs";
+				TargetAttributes = {
+					860B7AAB17E9F89900C984B4 = {
+						DevelopmentTeam = VW6ER3YSC3;
+					};
+				};
 			};
 			buildConfigurationList = 860B7AA717E9F89900C984B4 /* Build configuration list for PBXProject "StressTest" */;
 			compatibilityVersion = "Xcode 3.2";
@@ -219,7 +247,6 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				860B7AEA17E9FFC500C984B4 /* TLIndexPathTools.xcodeproj in Resources */,
 				860B7AC817E9F89900C984B4 /* Images.xcassets in Resources */,
 				860B7ABA17E9F89900C984B4 /* InfoPlist.strings in Resources */,
 				860B7AC317E9F89900C984B4 /* Main.storyboard in Resources */,
@@ -240,6 +267,14 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		AAE0C39D255332B30020E560 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = TLIndexPathTools;
+			targetProxy = AAE0C39C255332B30020E560 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
 
 /* Begin PBXVariantGroup section */
 		860B7AB817E9F89900C984B4 /* InfoPlist.strings */ = {
@@ -367,10 +402,12 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
+				DEVELOPMENT_TEAM = VW6ER3YSC3;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "StressTest/StressTest-Prefix.pch";
 				INFOPLIST_FILE = "StressTest/StressTest-Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 9.2;
+				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(USER_LIBRARY_DIR)/Developer/Xcode/DerivedData/TLIndexPathTools-cdwpczkvzhcayycfczwsnuukurgs/Build/Products/Debug-iphoneos",
@@ -389,10 +426,12 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
+				DEVELOPMENT_TEAM = VW6ER3YSC3;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "StressTest/StressTest-Prefix.pch";
 				INFOPLIST_FILE = "StressTest/StressTest-Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 9.2;
+				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(USER_LIBRARY_DIR)/Developer/Xcode/DerivedData/TLIndexPathTools-cdwpczkvzhcayycfczwsnuukurgs/Build/Products/Debug-iphoneos",
